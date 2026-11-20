@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUIZORA - Online Quiz Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0B1020;
+            color: #F8FAFC;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #11182B;
+            padding: 20px;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B5CF6;
+        }
+
+        .nav-links a {
+            color: #A6B0C3;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .nav-links a:hover {
+            color: #8B5CF6;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #8B5CF6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #7C3AED;
+        }
+
+        .btn-secondary {
+            background-color: #22D3EE;
+            color: #0B1020;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #A6B0C3;
+            margin-bottom: 30px;
+        }
+
+        /* Sections */
+        .section {
+            padding: 60px 20px;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+        }
+
+        /* Quiz Cards */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background-color: #151E33;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #1E293B;
+        }
+
+        .quiz-card h3 {
+            color: #8B5CF6;
+            margin-bottom: 10px;
+        }
+
+        .quiz-card p {
+            color: #A6B0C3;
+            margin-bottom: 15px;
+        }
+
+        /* Quiz View */
+        .quiz-view {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-view.active {
+            display: block;
+        }
+
+        .question {
+            background-color: #151E33;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question h3 {
+            margin-bottom: 20px;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #11182B;
+            border: 1px solid #1E293B;
+            color: #F8FAFC;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .options button:hover {
+            background-color: #1E293B;
+        }
+
+        .options button.selected {
+            background-color: #8B5CF6;
+            border-color: #8B5CF6;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #22D3EE;
+        }
+
+        /* Results */
+        .results {
+            display: none;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 48px;
+            color: #34D399;
+            margin-bottom: 20px;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #151E33;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #A6B0C3;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #1E293B;
+            border-radius: 5px;
+            background-color: #11182B;
+            color: #F8FAFC;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #11182B;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">QUIZORA</div>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home')">Home</a>
+                <a href="#" onclick="showPage('quizzes')">Quizzes</a>
+                <a href="#" onclick="showPage('login')">Login</a>
+                <a href="#" onclick="showPage('register')" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page">
+        <div class="hero">
+            <h1>Your brain called. It wants a challenge.</h1>
+            <p>Think Fast. Play Smart. Rise to the Top.</p>
+            <button class="btn btn-primary" onclick="showPage('quizzes')">Start Playing</button>
+            <button class="btn btn-secondary" onclick="showPage('quizzes')">Explore Quizzes</button>
+        </div>
+
+        <div class="section">
+            <div class="container">
+                <h2>Featured Categories</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <h3>🔬 Science</h3>
+                        <p>Explore the wonders of the natural world</p>
+                    </div>
+                    <div class="quiz-card">
+                        <h3>💻 Technology</h3>
+                        <p>Computers, coding, and digital innovation</p>
+                    </div>
+                    <div class="quiz-card">
+                        <h3>📐 Mathematics</h3>
+                        <p>Numbers, logic, and problem-solving</p>
+                    </div>
+                    <div class="quiz-card">
+                        <h3>🌍 Geography</h3>
+                        <p>Countries, capitals, and landscapes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quizzes Page -->
+    <div id="quizzes-page" class="page hidden">
+        <div class="container section">
+            <h2>Available Quizzes</h2>
+            <div class="quiz-grid" id="quiz-list">
+                <!-- Quizzes will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Play Page -->
+    <div id="quiz-play-page" class="page hidden">
+        <div class="container section">
+            <div class="quiz-view active" id="quiz-view">
+                <div class="timer" id="timer">Time: 60s</div>
+                <div class="question">
+                    <h3 id="question-text">Question text here</h3>
+                    <div class="options" id="options">
+                        <!-- Options will be loaded here -->
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="nextQuestion()">Next Question</button>
+                    <button class="btn btn-secondary" onclick="submitQuiz()">Submit Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div id="results-page" class="page hidden">
+        <div class="container section">
+            <div class="results active" id="results">
+                <h2 id="score">Score: 0%</h2>
+                <p id="score-message">Quiz completed!</p>
+                <button class="btn btn-primary" onclick="showPage('quizzes')">Play Again</button>
+                <button class="btn btn-secondary" onclick="showPage('home')">Go Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page hidden">
+        <div class="container section">
+            <div class="form-container">
+                <h2 style="text-align: center; margin-bottom: 20px;">Login</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">Login</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    Don't have an account? <a href="#" onclick="showPage('register')" style="color: #8B5CF6;">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register-page" class="page hidden">
+        <div class="container section">
+            <div class="form-container">
+                <h2 style="text-align: center; margin-bottom: 20px;">Create Account</h2>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="register-name" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="register-email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="register-password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="handleRegister()">Create Account</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    Already have an account? <a href="#" onclick="showPage('login')" style="color: #8B5CF6;">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 QUIZORA. Think Fast. Play Smart. Rise to the Top.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple quiz data
+        const quizzes = [
+            {
+                id: 1,
+                title: "Basic Science",
+                category: "Science",
+                difficulty: "Easy",
+                questions: [
+                    {
+                        question: "What is the chemical symbol for water?",
+                        options: ["H2O", "CO2", "NaCl", "O2"],
+                        correct: 0
+                    },
+                    {
+                        question: "What planet is known as the Red Planet?",
+                        options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the powerhouse of the cell?",
+                        options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi apparatus"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Web Development",
+                category: "Technology",
+                difficulty: "Easy",
+                questions: [
+                    {
+                        question: "What does HTML stand for?",
+                        options: ["Hyper Text Markup Language", "High Tech Modern Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the purpose of CSS?",
+                        options: ["Database management", "Styling web pages", "Server-side scripting", "Network security"],
+                        correct: 1
+                    },
+                    {
+                        question: "What does HTTP stand for?",
+                        options: ["Hyper Text Transfer Protocol", "High Tech Transfer Protocol", "Hyper Text Transmission Protocol", "Home Tool Transfer Protocol"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Mathematics Basics",
+                category: "Mathematics",
+                difficulty: "Medium",
+                questions: [
+                    {
+                        question: "What is 2 + 2 * 2?",
+                        options: ["8", "6", "4", "10"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the square root of 144?",
+                        options: ["10", "11", "12", "13"],
+                        correct: 2
+                    },
+                    {
+                        question: "What is 15% of 200?",
+                        options: ["15", "20", "25", "30"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "World Geography",
+                category: "Geography",
+                difficulty: "Easy",
+                questions: [
+                    {
+                        question: "What is the capital of France?",
+                        options: ["London", "Berlin", "Paris", "Madrid"],
+                        correct: 2
+                    },
+                    {
+                        question: "Which is the largest continent by area?",
+                        options: ["Africa", "Asia", "Europe", "North America"],
+                        correct: 1
+                    },
+                    {
+                        question: "What is the longest river in the world?",
+                        options: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+                        correct: 1
+                    }
+                ]
+            }
+        ];
+
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timer = null;
+        let timeLeft = 60;
+
+        // Show different pages
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageName + '-page').classList.remove('hidden');
+
+            if (pageName === 'quizzes') {
+                loadQuizzes();
+            }
+        }
+
+        // Load quizzes on the quizzes page
+        function loadQuizzes() {
+            const quizList = document.getElementById('quiz-list');
+            quizList.innerHTML = '';
+
+            quizzes.forEach(quiz => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.innerHTML = `
+                    <h3>${quiz.title}</h3>
+                    <p>${quiz.category} - ${quiz.difficulty}</p>
+                    <p>${quiz.questions.length} questions</p>
+                    <button class="btn btn-primary" onclick="startQuiz(${quiz.id})">Start Quiz</button>
+                `;
+                quizList.appendChild(card);
+            });
+        }
+
+        // Start a quiz
+        function startQuiz(quizId) {
+            currentQuiz = quizzes.find(q => q.id === quizId);
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            timeLeft = 60;
+            showPage('quiz-play');
+            loadQuestion();
+            startTimer();
+        }
+
+        // Load current question
+        function loadQuestion() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.question;
+
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index, button);
+                optionsDiv.appendChild(button);
+            });
+        }
+
+        // Select an answer
+        function selectAnswer(index, button) {
+            document.querySelectorAll('.options button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            button.classList.add('selected');
+            userAnswers[currentQuestionIndex] = index;
+        }
+
+        // Go to next question
+        function nextQuestion() {
+            if (userAnswers[currentQuestionIndex] === undefined) {
+                alert('Please select an answer!');
+                return;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < currentQuiz.questions.length) {
+                loadQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        // Submit quiz and show results
+        function submitQuiz() {
+            clearInterval(timer);
+
+            let correct = 0;
+            currentQuiz.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correct++;
+                }
+            });
+
+            const score = Math.round((correct / currentQuiz.questions.length) * 100);
+            document.getElementById('score').textContent = `Score: ${score}%`;
+
+            let message = '';
+            if (score >= 80) {
+                message = 'Excellent! Big brain moves!';
+            } else if (score >= 60) {
+                message = 'Good job! Keep learning!';
+            } else {
+                message = 'Keep practicing! You\'ll get better!';
+            }
+            document.getElementById('score-message').textContent = message;
+
+            showPage('results');
+        }
+
+        // Timer
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // Handle login (simplified - just stores in localStorage)
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (email && password) {
+                localStorage.setItem('user', email);
+                alert('Login successful!');
+                showPage('home');
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Handle register (simplified)
+        function handleRegister() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            if (name && email && password) {
+                localStorage.setItem('user', email);
+                alert('Account created successfully!');
+                showPage('home');
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Initialize
+        showPage('home');
+    </script>
+</body>
+</html>
